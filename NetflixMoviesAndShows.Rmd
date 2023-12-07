@@ -1,0 +1,50 @@
+---
+title: "Netflix Movies and Shows"
+output: html_document
+date: "2023-12-07"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+library(tidyverse)
+library(lubridate)
+
+
+netflix_data <- read.csv("netflix_titles.csv")
+
+netflix_data %>%
+  mutate(year = year(as.Date(date_added, format="%B %d, %Y"))) %>%
+  filter(!is.na(year)) %>%
+  group_by(year) %>%
+  tally() %>%
+  ggplot(aes(x=year, y=n)) +
+  geom_bar(stat="identity", fill="hotpink") +
+  labs(title="Netflix Releases by Year", x="Year", y="Number of Releases") +
+  theme_minimal()
+
+```
+A Bar Chart Showing the Number of Releases Each Year:
+This visualization will help you understand how Netflix's catalog has grown over the years.
+
+
+
+
+```{r}
+netflix_data %>%
+  group_by(type) %>%
+  tally() %>%
+  ggplot(aes(x="", y= n, fill=type)) +
+  geom_bar(width=1, stat="identity") +
+  coord_polar(theta="y") +
+  labs(title="Distribution of Content Types on Netflix") +
+  theme_minimal()
+
+
+```
+A Pie Chart Showing the Distribution of Content Types (Movies vs. TV Shows):
+This visualization will give you an overview of the composition of Netflix's content.
